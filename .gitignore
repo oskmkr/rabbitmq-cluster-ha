@@ -1,0 +1,17 @@
+/webapp/WEB-INF/classes
+/webapp/WEB-INF/lib/
+*.jar
+classes/
+target
+build
+bin
+.idea
+.classpath
+.project
+.git
+/.settings/
+*.class
+*.bak
+*.iml
+/logs/
+/tomcat.8080/
