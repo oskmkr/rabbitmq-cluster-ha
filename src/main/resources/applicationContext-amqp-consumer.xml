@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="applicationContext-amqp-common.xml"/>
+
+    <bean id="jsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter"/>
+    <!--recovery-interval="10000"-->
+    <rabbit:listener-container connection-factory="connectionFactory" message-converter="jsonMessageConverter" recovery-interval="3000" >
+        <rabbit:listener queues="ha.lionQueue" ref="messageConsumer" method="listen" />
+        <rabbit:listener queues="ha.tigerQueue,ha.dogQueue" ref="messageConsumer" method="eavesdrop" />
+    </rabbit:listener-container>
+
+    <bean id="messageConsumer" class="io.oskm.rabbitmq.springamqp.MessageConsumer"/>
+    <bean id="retryAdvice" class="org.springframework.amqp.rabbit.config.StatefulRetryOperationsInterceptorFactoryBean" />
+</beans>

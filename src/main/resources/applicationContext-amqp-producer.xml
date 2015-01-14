@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="applicationContext-amqp-common.xml"/>
+
+    <!-- Creates a org.springframework.amqp.rabbit.core.RabbitTemplate for access to the broker -->
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="my.direct.exchange" routing-key="routing.lion.binding" message-converter="jsonMessageConverter"/>
+
+    <!-- Direct Exchange -->
+    <rabbit:direct-exchange name="my.direct.exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="ha.lionQueue" key="routing.lion.binding"></rabbit:binding>
+            <rabbit:binding queue="ha.tigerQueue" key="routing.tiger.binding"></rabbit:binding>
+            <rabbit:binding queue="ha.dogQueue" key="routing.dog.binding"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <!-- Fan out Exchange -->
+    <rabbit:fanout-exchange name="my.fanout.exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="ha.lionQueue"></rabbit:binding>
+            <rabbit:binding queue="ha.tigerQueue"></rabbit:binding>
+            <rabbit:binding queue="ha.dogQueue"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:fanout-exchange>
+
+    <!-- Topic  Exchange -->
+    <rabbit:topic-exchange name="my.topic.exchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="ha.lionQueue" pattern="routing.lion.*"></rabbit:binding>
+            <rabbit:binding queue="ha.tigerQueue" pattern="routing.tiger.*"></rabbit:binding>
+            <rabbit:binding queue="ha.dogQueue" pattern="routing.tiger.*"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <!-- Creates a queue for consumers to retrieve messages -->
+
+</beans>

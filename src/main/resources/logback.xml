@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2014. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+        ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <!--
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{56} - %msg%n</pattern>
+            <pattern>%d{ABSOLUTE} %5p %t %c{2}:%L - %m%n</pattern>
+            -->
+            <pattern>%d [%thread] %-5level %logger{100} [%file : %line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.commons.httpclient" additivity="false">
+        <level value="ERROR"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
+        <level value="OFF"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
