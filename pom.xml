@@ -199,46 +199,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>local</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<env>local</env>
-				<deploy.phase>local</deploy.phase>
-				<deploy.dir>${webapp.directory}</deploy.dir>
-				<skipTests>true</skipTests>
-			</properties>
-		</profile>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<env>dev</env>
-				<deploy.phase>dev</deploy.phase>
-				<deploy.dir>${basedir}/../deploy</deploy.dir>
-				<skipTests>true</skipTests>
-			</properties>
-		</profile>
-		<profile>
-			<id>real</id>
-			<properties>
-				<env>real</env>
-				<deploy.phase>real</deploy.phase>
-				<deploy.dir>${basedir}/../deploy</deploy.dir>
-			</properties>
-		</profile>
-		<profile>
-			<id>ci</id>
-			<properties>
-				<env>dev</env>
-				<deploy.phase>dev</deploy.phase>
-				<deploy.dir>${basedir}/../deploy</deploy.dir>
-				<skipTests>false</skipTests>
-			</properties>
-		</profile>
-
-
-	</profiles>
 </project>

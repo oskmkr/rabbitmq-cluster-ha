@@ -13,7 +13,7 @@ RabbitMQ는 표준 AMQP (Advanced Message Queueing Protocol) 메세지 브로커
 	• Queue - messages are placed into queues by the exchange. A consumer listens to a queue.
 	• Channel - best way I can think of to describe this is an open connection to the broker. Not sure it matters too much to be honest, but I'm still learning at this point.
 
-#### AMQP란 무엇인가?
+#### AMQP란?
 - Advanced Message Queing Protocol의 약자로, 흔히 알고 있는 MQ의 오픈소스에 기반한 표준 프로토콜을 의미한다. AMQP 자체는 프로토콜을 의미하기 때문에 이 프로토콜에 따른 실제 MQ 제품들은 여러가지가 존재할 수 있으나 최근 가장 많이 사용되는것은 아무래도 Erlang( https://mirror.enha.kr/wiki/Erlang )과 자바로 작성된 RabbitMQ라고 할 수 있다.
 
 #### AMQP 등장배경
@@ -68,7 +68,7 @@ http://localhost:15674
 http://localhost:15675
 
 #### 모니터링 페이지
-![monitor](https://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_monitor.jpg)
+![monitor](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_monitor.jpg)
 
 single machine 에서 여러개를 띄우기 위한 예제 bat ( windows )
 
@@ -97,11 +97,14 @@ Starting node 'node1@XXXXXX' ...
 > All data/state required for the operation of a RabbitMQ broker is replicated across all nodes, for reliability and scaling, with full ACID properties
 rabbitMQ broker 가 동작하기 위한 데이터, 상태가 모두 복제된다. 이를 통해 신뢰성, 독립적 확장성이 가능해진다.
 > An exception to this are message queues, which by default reside on the node that created them, though they are visible and reachable from all nodes.
-Message Queue 는 제외된다. 각 node 에서 해당 queue 에 모두 접근할 수는 있지만, queue 는 기본적으로 최초에 생성된 node 에 의존된다. 따라서, 해당 node 가 상태 이상이 발생했을 경우 해당 queue 는 더 이상 동작이 불가능하다. 이를 위해서는 High Available Queue 설정을 통해 mirrored queue 설정이 필요하다.
+복제 항목 중 Message Queue 는 제외된다. 각 node 에서 해당 queue 에 모두 접근할 수는 있지만, queue 는 기본적으로 최초에 생성된 node 에 의존된다. 따라서, 해당 node 가 상태 이상이 발생했을 경우 해당 queue 는 더 이상 동작이 불가능하다. 이를 위해서는 High Available Queue 설정을 통해 [mirrored queue](#mirrored-queue) 설정이 필요하다.
+
+###### mirrored queue ( mirrored queue 와 replication 의 차이 )
+replication 의 경우 cluster 구성 요소가 추가되었을 때 추가되기 전의 상태와 동일하게 맞추기 위한 복제 작업을 진행하지만,
+mirrored queue 의 경우 ==cluster 구성 요소가 추가된 시점 이후의 데이터만 동일하게 유지==한다.
 
 각 node 들은 각자 서로 통신 허용 여부를 cookie 를 이용 해 결정한다. 여기에서 cookie 는 문자,숫자로 이루어 진 문자열을 의미한다.
 따라서 clustering 을 구성할 때 이 값을 동일하게 설정해야 한다.
-
 
 ```language
 /var/lib/rabbitmq/.erlang.cookie
@@ -133,33 +136,36 @@ rabbitmqctrl -n node2 start_app // 노드 시작
 ...soon...
 
 1. before clustering
-![monitor](https://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_clustering_before.jpg)
+![monitor](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_clustering_before.jpg)
 
 2. after clustering
-![monitor](https://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_clustering_after.jpg)
+![monitor](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_clustering_after.jpg)
 
 ## HA (High Availability)
 
 RabbitMQ 2.x 대에서는 ha 구성 관련하여, application level에서 아래의 설정을 통해 구성 하였으나,
 
+* deprecated configuration
 ```xml
 <rabbit:queue-arguments>
         <entry key="x-ha-policy" value="all"></entry>
 </rabbit:queue-arguments>
 ```
 
-RabbitMQ 3.0.x 에서부터는 서버 configuration 을 통해 구성하도록 변경된 것을 확인하였습니다.
-
-관련하여 어플리케이션 레벨에서 위 설정은 더이상 의미가 없으니 삭제하는 것이 좋을 듯하며,
-
-서버 configuration 에서 설정하도록 처리하면, 특정 node 다운 시 fail-over 동작이 잘 이루어 지는 것을 확인하였습니다.
-
+* latest configuration
 ```language
 rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
 ```
 
+
+RabbitMQ 3.0.x 에서부터는 서버 configuration 을 통해 구성하도록 변경된 것을 확인하였습니다.
+
+관련하여 어플리케이션 레벨에서 설정 ( deprecated configuration ) 은 더이상 의미가 없으며,
+
+서버 configuration ( latedst configuration )에서 설정하도록 처리하게 되면, 특정 node 다운 시 fail-over 동작이 잘 이루어 진다.
+
 #### HA queue 설정 완료 화면
-![ha](https://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_ha.jpg)
+![ha](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_ha.jpg)
 
 ## load balancing
 
