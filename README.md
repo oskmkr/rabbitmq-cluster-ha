@@ -1,5 +1,5 @@
 # RabbitMQ Clustering 과 HA ( High Available ) Queue 구성
-_write date 2015.1.16, oskmkr@gmail.com_ 
+_sungkyu.eo@samsung.com_ 
 
 [TOC]
 
@@ -22,7 +22,7 @@ RabbitMQ는 표준 AMQP (Advanced Message Queueing Protocol) 메세지 브로커
 - 이런 기존 MQ 솔루션의 약점을 보완하기 위해 나온 것이 AMQP 이다.
 - 즉, 서로 다른 시스템간에서 효율적으로 메세지를 교환하기 위한 것이 AMQP 이다.
 
-#### Why AMQP?
+#### Why AMQP, RabbitMQ ?
 1. Interoperability - like TCP , unlike JMS
 2. 여러 제품군과 open license, 무료 - 여러 제품군이 있기 때문에 비교하여 사용 가능
 3. 효율적 - 모든 major language 지원, 대부분의 OS 지원
@@ -30,9 +30,6 @@ RabbitMQ는 표준 AMQP (Advanced Message Queueing Protocol) 메세지 브로커
 
 #### Messaging senario
 > todo...
-
-## sample code
-https://github.com/oskmkr/rabbitmq-cluster-ha/
 
 ## rabbitmq version
 rabbit-mq-3.4.2 ( 포스팅 작성 기준 latest version )
@@ -153,6 +150,19 @@ RabbitMQ 2.x 대에서는 ha 구성 관련하여, application level에서 아래
 ```
 
 * latest configuration
+* @see http://www.rabbitmq.com/ha.html
+| **rabbitmqctl **|
+|-|
+|rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'|
+|**rabbitmqctl (Windows)**|
+|rabbitmqctl set_policy ha-all "^ha\." "{""ha-mode"":""all""}"|
+|** HTTP API ** |
+|PUT /api/policies/%2f/ha-all {"pattern":"^ha\.", "definition":{"ha-mode":"all"}}|
+|** Web UI**	|
+|Navigate to Admin > Policies > Add / update a policy.
+Enter "ha-all" next to Name, "^ha\." next to Pattern, and "ha-mode" = "all" in the first line next to Policy.
+Click Add policy.|
+
 ```language
 rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
 ```
@@ -186,6 +196,8 @@ or
 {mq.lb1.address} -- rabbitMQ cluster [ node1, node2 ... node5 ]
 {mq.lb2.address} -- rabbitMQ cluster [ node6, node7 ... nodeN ]
 ```
+
+- simple tcp load balancer : https://github.com/oskmkr/nodejs-proxy/
 
 #### application connection configuration
 
