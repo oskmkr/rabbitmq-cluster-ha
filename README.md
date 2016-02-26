@@ -65,7 +65,7 @@ http://localhost:15674
 http://localhost:15675
 
 #### 모니터링 페이지
-![monitor](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_monitor.jpg)
+![monitor](https://github.com/oskmkr/rabbitmq-cluster-ha/blob/master/rabbitmq_monitor.jpg)
 
 single machine 에서 여러개를 띄우기 위한 예제 bat ( windows )
 
@@ -133,10 +133,10 @@ rabbitmqctrl -n node2 start_app // 노드 시작
 ...soon...
 
 1. before clustering
-![monitor](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_clustering_before.jpg)
+![monitor](https://github.com/oskmkr/rabbitmq-cluster-ha/blob/master/rabbitmq_clustering_before.jpg)
 
 2. after clustering
-![monitor](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_clustering_after.jpg)
+![monitor](https://github.com/oskmkr/rabbitmq-cluster-ha/blob/master/rabbitmq_clustering_after.jpg)
 
 ## HA (High Availability)
 
@@ -175,7 +175,7 @@ RabbitMQ 3.0.x 에서부터는 서버 configuration 을 통해 구성하도록 �
 서버 configuration ( latedst configuration )에서 설정하도록 처리하게 되면, 특정 node 다운 시 fail-over 동작이 잘 이루어 진다.
 
 #### HA queue 설정 완료 화면
-![ha](http://raw.githubusercontent.com/oskmkr/rabbitmq-cluster-ha/master/rabbitmq_ha.jpg)
+![ha](https://github.com/oskmkr/rabbitmq-cluster-ha/blob/master/rabbitmq_ha.jpg)
 
 ## load balancing
 
